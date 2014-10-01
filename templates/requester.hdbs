@@ -1,0 +1,15 @@
+<p>Related information about this requester:</p>
+<br />
+<table width="100%">
+<tr>
+	<td>Timezone:</td>
+	<td class="total">{{userData.user.time_zone}}</td>
+</tr>
+<tr>
+	<td>Offset:</td>
+	<td class="total">{{userTZ.formatted_offset}}</td>
+<tr>
+	<td>Requester's local time:</td>
+	<td class="total">{{userTZ.localtime}}</td>
+</tr>
+</table>
