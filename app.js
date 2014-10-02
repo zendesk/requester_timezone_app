@@ -33,6 +33,7 @@
     },
 
     getUserInfo: function() {
+      this.switchTo('loading');
       var id = this.ticket().requester().id();
       this.myLogger("The requester ID is " + id);
       this.ajax('userInfo', id);
