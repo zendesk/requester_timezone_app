@@ -5,8 +5,8 @@
       'app.activated':'getUserInfo',
       'userInfo.done':'setUserInfo',
       'userInfo.fail':'showError',
-      'timezones.done':'setTimezone',
-      'timezones.fail':'showError'
+      'time_zones.done':'setTimezone',
+      'time_zones.fail':'showError'
     },
 
     requests: {
@@ -19,7 +19,7 @@
         };
       },
 
-      timezones: function() {
+      time_zones: function() {
         return {
           url: '/api/v2/time_zones.json',
           type: 'GET',
@@ -28,30 +28,9 @@
       }
     },
 
+    //helpers
     myLogger: function(msg) {
       console.log(msg);
-    },
-
-    getUserInfo: function() {
-      this.switchTo('loading');
-      var id = this.ticket().requester().id();
-      this.myLogger("The requester ID is " + id);
-      this.ajax('userInfo', id);
-    },
-
-    setUserInfo: function(userData) {
-      this.myLogger("Setting userData");
-      this.userData = userData;
-      //now get the timezone data
-      this.ajax('timezones');
-    },
-
-    setTimezone: function(timezone) {
-      this.myLogger("Setting the timezone object");
-      this.myLogger(timezone);
-      this.timezone = timezone;
-      //now show the info
-      this.showInfo();
     },
 
     getRequestersTZ: function(userTZ) {
@@ -68,10 +47,34 @@
       this.myLogger("Getting the local time from offset " + offset);
       this.myLogger("UTC:" + (new Date().toUTCString()));
       //convert offset in minutes to milliseconds
-      var offsetMS = offset * 60 * 1000;
-      var local = new Date(new Date().getTime() + offsetMS);
-      this.userTZ.localtime = local.toUTCString().replace( / GMT$/, "");
+      var offset_ms = offset * 60 * 1000;
+      var localtime = new Date(new Date().getTime() + offset_ms);
+      this.userTZ.localtime = localtime.toUTCString().replace( / GMT$/, "");
       this.myLogger("local:" + this.userTZ.localtime);
+    },
+
+
+    //start running the app here
+    getUserInfo: function() {
+      this.switchTo('loading');
+      var id = this.ticket().requester().id();
+      this.myLogger("The requester ID is " + id);
+      this.ajax('userInfo', id);
+    },
+
+    setUserInfo: function(userData) {
+      this.myLogger("Setting userData");
+      this.userData = userData;
+      //now get the timezone data
+      this.ajax('time_zones');
+    },
+
+    setTimezone: function(timezone) {
+      this.myLogger("Setting the timezone object");
+      this.myLogger(timezone);
+      this.timezone = timezone;
+      //now show the info
+      this.showInfo();
     },
 
     showInfo: function() {
