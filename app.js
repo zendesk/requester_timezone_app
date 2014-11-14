@@ -6,7 +6,9 @@
       'userInfo.done':'setUserInfo',
       'userInfo.fail':'showError',
       'time_zones.done':'setTimezone',
-      'time_zones.fail':'showError'
+      'time_zones.fail':'showError',
+      'shown #meeting' : 'handleShown',
+      'hidden #meeting' : 'handleHidden'
     },
 
     requests: {
@@ -82,6 +84,19 @@
       this.getRequestersTZ(this.userData.user.time_zone);
       this.getRequestersLocalTime(this.userTZ.offset);
       this.switchTo('requester', {userData: this.userData, userTZ: this.userTZ});
+    },
+
+    handleShown: function() {
+      var times = this.$('#timestable');
+      for (var h=0; h<24; h++) {
+        times.append("<tr>");
+        times.append("<td>Hour " + h + "</td><td>Other hour " + h + "</td>");
+        times.append("</tr>");
+      }
+    },
+
+    handleHidden: function() {
+      this.$('#timestable').html("");
     },
 
     showError: function() {

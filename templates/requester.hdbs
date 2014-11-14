@@ -1,13 +1,35 @@
 <table width="100%">
-<tr>
-	<td>Timezone:</td>
-	<td class="total">{{userData.user.time_zone}}</td>
-</tr>
-<tr>
-	<td>Offset:</td>
-	<td class="total">{{userTZ.formatted_offset}}</td>
-<tr>
-	<td>Requester's local time:</td>
-	<td class="total">{{userTZ.localtime}}</td>
-</tr>
+  <tr>
+    <td>Timezone:</td>
+    <td class="total">{{userData.user.time_zone}}</td>
+  </tr>
+  <tr>
+    <td>Offset:</td>
+    <td class="total">{{userTZ.formatted_offset}}</td>
+  <tr>
+    <td>Requester's local time:</td>
+    <td class="total">{{userTZ.localtime}}</td>
+  </tr>
 </table>
+<a class="btn btn-large" data-toggle="modal" data-target="#meeting">Meeting Planner</a>
+
+<!-- modal for matching your times with their's -->
+<div id="meeting" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="meetingplannerid">Meeting Planner</h3>
+  </div>
+  <div class="modal-body">
+    <table width="50%">
+      <tbody id="timestable">
+        <tr>
+          <th>Your Time</th>
+          <th>Requester's Time</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
