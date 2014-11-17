@@ -32,7 +32,10 @@
 
     //helpers
     myLogger: function(msg) {
-      console.log(msg);
+      var logging = true;
+      if (logging) {
+        console.log(msg);
+      }
     },
 
     getRequestersTZ: function(userTZ) {
@@ -79,6 +82,22 @@
       this.showInfo();
     },
 
+    populateTZTimes: function(offset) {
+      var times = [];
+      var current_hour;
+      for (var h=0; h<24; h++){
+        current_hour = h + (offset/60);
+        if (current_hour < 0) {
+          current_hour += 24;
+        }
+        if (current_hour > 24) {
+          current_hour = current_hour % 24;
+        }
+        times.push(current_hour);
+      }
+      return times;
+    },
+
     showInfo: function() {
       this.myLogger(this.userData);
       this.getRequestersTZ(this.userData.user.time_zone);
@@ -88,9 +107,11 @@
 
     handleShown: function() {
       var times = this.$('#timestable');
+      var tzTimes = this.populateTZTimes(this.userTZ.offset);
+      this.myLogger(this.userTZ);
       for (var h=0; h<24; h++) {
         times.append("<tr>");
-        times.append("<td>Hour " + h + "</td><td>Other hour " + h + "</td>");
+        times.append("<td>" + h + "</td><td>" + tzTimes[h] + "</td>");
         times.append("</tr>");
       }
     },
