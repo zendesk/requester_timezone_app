@@ -54,7 +54,6 @@
       for (var index = 0; index < this.timezone.time_zones.length; index++) {
         if (this.timezone.time_zones[index].name == userTZ) {
           this.myLogger("Timezone found at index " + index);
-          //this.requesterTZ = this.timezone.time_zones[index];
           result = this.timezone.time_zones[index];
         }
       }
@@ -68,7 +67,6 @@
       //convert offset in minutes to milliseconds
       var offset_ms = offset * 60 * 1000;
       var localtime = new Date(new Date().getTime() + offset_ms);
-      //this.requesterTZ.localtime = localtime.toUTCString().replace( / GMT$/, "");
       result = localtime.toUTCString().replace( / GMT$/, "");
       this.myLogger("local:" + result);
       return result;
@@ -87,7 +85,7 @@
       this.myLogger("Setting requesterData");
       this.requesterData = userData;
       this.myLogger(this.requesterData);
-      //now get the timezone data
+      //now get the agent data
       this.getAgentInfo();
     },
 
@@ -117,6 +115,7 @@
     populateTZTimes: function(offset) {
       var times = [];
       var current_hour;
+      var current_time;
       for (var h=0; h<24; h++){
         current_hour = h + (offset/60);
         if (current_hour < 0) {
@@ -125,7 +124,8 @@
         if (current_hour > 24) {
           current_hour = current_hour % 24;
         }
-        times.push(current_hour);
+        current_time = new Date(null, null, null, current_hour, null, null);
+        times.push(current_time.toTimeString().substring(0,5));
       }
       return times;
     },
