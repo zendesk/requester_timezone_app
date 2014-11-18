@@ -1,14 +1,14 @@
 <table width="100%">
   <tr>
     <td>Timezone:</td>
-    <td class="total">{{userData.user.time_zone}}</td>
+    <td class="total">{{requesterData.user.time_zone}}</td>
   </tr>
   <tr>
     <td>Offset:</td>
-    <td class="total">{{userTZ.formatted_offset}}</td>
+    <td class="total">{{requesterTZ.formatted_offset}}</td>
   <tr>
     <td>Requester's local time:</td>
-    <td class="total">{{userTZ.localtime}}</td>
+    <td class="total">{{requesterTZ.localtime}}</td>
   </tr>
 </table>
 <a class="btn btn-large" data-toggle="modal" data-target="#meeting">Meeting Planner</a>

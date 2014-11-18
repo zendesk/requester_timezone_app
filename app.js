@@ -2,18 +2,28 @@
 
   return {
     events: {
-      'app.activated':'getUserInfo',
-      'userInfo.done':'setUserInfo',
-      'userInfo.fail':'showError',
-      'time_zones.done':'setTimezone',
-      'time_zones.fail':'showError',
-      'shown #meeting' : 'handleShown',
-      'hidden #meeting' : 'handleHidden'
+      'app.activated'     :'getRequesterInfo',
+      'requesterInfo.done':'setRequesterInfo',
+      'requesterInfo.fail':'showError',
+      'agentInfo.done'    :'setAgentInfo',
+      'agentInfo.fail'    :'showError',
+      'time_zones.done'   :'setTimezone',
+      'time_zones.fail'   :'showError',
+      'shown #meeting'    :'handleShown',
+      'hidden #meeting'   :'handleHidden'
     },
 
     requests: {
 
-      userInfo: function(id) {
+      requesterInfo: function(id) {
+        return {
+          url: '/api/v2/users/' + id + '.json',
+          type: 'GET',
+          dataType: 'json'
+        };
+      },
+
+      agentInfo: function(id) {
         return {
           url: '/api/v2/users/' + id + '.json',
           type: 'GET',
@@ -38,38 +48,59 @@
       }
     },
 
-    getRequestersTZ: function(userTZ) {
+    getUserTZ: function(userTZ) {
+      var result;
       this.myLogger("Looking for the timezone that matches " + userTZ);
       for (var index = 0; index < this.timezone.time_zones.length; index++) {
         if (this.timezone.time_zones[index].name == userTZ) {
           this.myLogger("Timezone found at index " + index);
-          this.userTZ = this.timezone.time_zones[index];
+          //this.requesterTZ = this.timezone.time_zones[index];
+          result = this.timezone.time_zones[index];
         }
       }
+      return result;
     },
 
-    getRequestersLocalTime: function(offset) {
+    getLocalTime: function(offset) {
+      var result;
       this.myLogger("Getting the local time from offset " + offset);
       this.myLogger("UTC:" + (new Date().toUTCString()));
       //convert offset in minutes to milliseconds
       var offset_ms = offset * 60 * 1000;
       var localtime = new Date(new Date().getTime() + offset_ms);
-      this.userTZ.localtime = localtime.toUTCString().replace( / GMT$/, "");
-      this.myLogger("local:" + this.userTZ.localtime);
+      //this.requesterTZ.localtime = localtime.toUTCString().replace( / GMT$/, "");
+      result = localtime.toUTCString().replace( / GMT$/, "");
+      this.myLogger("local:" + result);
+      return result;
     },
 
 
     //start running the app here
-    getUserInfo: function() {
+    getRequesterInfo: function() {
       this.switchTo('loading');
       var id = this.ticket().requester().id();
       this.myLogger("The requester ID is " + id);
-      this.ajax('userInfo', id);
+      this.ajax('requesterInfo', id);
     },
 
-    setUserInfo: function(userData) {
-      this.myLogger("Setting userData");
-      this.userData = userData;
+    setRequesterInfo: function(userData) {
+      this.myLogger("Setting requesterData");
+      this.requesterData = userData;
+      this.myLogger(this.requesterData);
+      //now get the timezone data
+      this.getAgentInfo();
+    },
+
+    getAgentInfo: function() {
+      var id = this.currentUser().id();
+      this.myLogger("The agent ID is " + id);
+      this.ajax('agentInfo', id);
+    },
+
+    setAgentInfo: function(userData) {
+      this.myLogger("Setting agentData");
+      this.agentData = userData;
+      this.myLogger(this.agentData);
       //now get the timezone data
       this.ajax('time_zones');
     },
@@ -82,6 +113,7 @@
       this.showInfo();
     },
 
+    //show hours 0-23 offset for the user's TZ
     populateTZTimes: function(offset) {
       var times = [];
       var current_hour;
@@ -97,21 +129,28 @@
       }
       return times;
     },
+   
+    setUserTZData: function() {
+      this.requesterTZ = this.getUserTZ(this.requesterData.user.time_zone);
+      this.requesterTZ.localtime = this.getLocalTime(this.requesterTZ.offset);
+      this.agentTZ = this.getUserTZ(this.agentData.user.time_zone);
+      this.agentTZ.localtime = this.getLocalTime(this.agentTZ.offset);
+    },
 
     showInfo: function() {
-      this.myLogger(this.userData);
-      this.getRequestersTZ(this.userData.user.time_zone);
-      this.getRequestersLocalTime(this.userTZ.offset);
-      this.switchTo('requester', {userData: this.userData, userTZ: this.userTZ});
+      this.myLogger(this.requesterData);
+      this.setUserTZData();
+      this.switchTo('requester', {requesterData: this.requesterData, requesterTZ: this.requesterTZ});
     },
 
     handleShown: function() {
       var times = this.$('#timestable');
-      var tzTimes = this.populateTZTimes(this.userTZ.offset);
-      this.myLogger(this.userTZ);
+      var agentTZTimes = this.populateTZTimes(this.agentTZ.offset);
+      var requesterTZTimes = this.populateTZTimes(this.requesterTZ.offset);
+
       for (var h=0; h<24; h++) {
         times.append("<tr>");
-        times.append("<td>" + h + "</td><td>" + tzTimes[h] + "</td>");
+        times.append("<td>" + agentTZTimes[h] + "</td><td>" + requesterTZTimes[h] + "</td>");
         times.append("</tr>");
       }
     },
