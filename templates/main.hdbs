@@ -26,6 +26,9 @@
           <th>Your Time</th>
           <th>Requester's Time</th>
         </tr>
+        {{#each meetingTimes}}
+        <tr><td>{{agent}}</td><td>{{requester}}</td></tr>
+        {{/each}}
       </tbody>
     </table>
   </div>

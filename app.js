@@ -6,9 +6,7 @@
       'userInfo.done':'setUserInfo',
       'userInfo.fail':'showError',
       'time_zones.done'   :'setTimezone',
-      'time_zones.fail'   :'showError',
-      'shown #meeting'    :'handleShown',
-      'hidden #meeting'   :'handleHidden'
+      'time_zones.fail'   :'showError'
     },
 
     requests: {
@@ -137,25 +135,16 @@
     showInfo: function() {
       this.myLogger(this.requesterData);
       this.setUserTZData();
-      this.createMeetings();
-      this.switchTo('main', {requesterData: this.requesterData, requesterTZ: this.requesterTZ});
+      var meetingTimes = this.createMeetings();
+      this.switchTo('main', {requesterData: this.requesterData, requesterTZ: this.requesterTZ, meetingTimes: meetingTimes});
     },
 
     createMeetings: function() {
-      var times = this.$('#timestable');
-      this.agentTZTimes = this.populateTZTimes(this.agentTZ.offset);
-      this.requesterTZTimes = this.populateTZTimes(this.requesterTZ.offset);
-
-
-      //for (var h=0; h<24; h++) {
-        //times.append("<tr>");
-        //times.append("<td>" + agentTZTimes[h] + "</td><td>" + requesterTZTimes[h] + "</td>");
-        //times.append("</tr>");
-      //}
-    },
-
-    handleHidden: function() {
-      this.$('#timestable').html("");
+      var agentTZTimes = this.populateTZTimes(this.agentTZ.offset);
+      var requesterTZTimes = this.populateTZTimes(this.requesterTZ.offset);
+      return _.map(agentTZTimes, function(hour, index) {
+        return {agent: hour, requester: requesterTZTimes[index]};
+      });
     },
 
     showError: function() {
