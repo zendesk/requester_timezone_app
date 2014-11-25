@@ -3,12 +3,8 @@
   return {
     events: {
       'app.activated'     :'getRequesterInfo',
-      //'requesterInfo.done':'setRequesterInfo',
-      //'requesterInfo.fail':'showError',
       'userInfo.done':'setUserInfo',
       'userInfo.fail':'showError',
-      //'agentInfo.done'    :'setAgentInfo',
-      //'agentInfo.fail'    :'showError',
       'time_zones.done'   :'setTimezone',
       'time_zones.fail'   :'showError',
       'shown #meeting'    :'handleShown',
@@ -17,23 +13,7 @@
 
     requests: {
 
-      requesterInfo: function(id) {
-        return {
-          url: '/api/v2/users/' + id + '.json',
-          type: 'GET',
-          dataType: 'json'
-        };
-      },
-
       userInfo: function(id) {
-        return {
-          url: '/api/v2/users/' + id + '.json',
-          type: 'GET',
-          dataType: 'json'
-        };
-      },
-
-      agentInfo: function(id) {
         return {
           url: '/api/v2/users/' + id + '.json',
           type: 'GET',
@@ -73,7 +53,7 @@
     getLocalTime: function(offset) {
       var result;
       this.myLogger("Getting the local time from offset " + offset);
-      this.myLogger("UTC:" + (new Date().toUTCString()));
+      //this.myLogger("UTC:" + (new Date().toUTCString()));
       //convert offset in minutes to milliseconds
       var offset_ms = offset * 60 * 1000;
       var localtime = new Date(new Date().getTime() + offset_ms);
@@ -157,19 +137,21 @@
     showInfo: function() {
       this.myLogger(this.requesterData);
       this.setUserTZData();
-      this.switchTo('requester', {requesterData: this.requesterData, requesterTZ: this.requesterTZ});
+      this.createMeetings();
+      this.switchTo('main', {requesterData: this.requesterData, requesterTZ: this.requesterTZ});
     },
 
-    handleShown: function() {
+    createMeetings: function() {
       var times = this.$('#timestable');
-      var agentTZTimes = this.populateTZTimes(this.agentTZ.offset);
-      var requesterTZTimes = this.populateTZTimes(this.requesterTZ.offset);
+      this.agentTZTimes = this.populateTZTimes(this.agentTZ.offset);
+      this.requesterTZTimes = this.populateTZTimes(this.requesterTZ.offset);
 
-      for (var h=0; h<24; h++) {
-        times.append("<tr>");
-        times.append("<td>" + agentTZTimes[h] + "</td><td>" + requesterTZTimes[h] + "</td>");
-        times.append("</tr>");
-      }
+
+      //for (var h=0; h<24; h++) {
+        //times.append("<tr>");
+        //times.append("<td>" + agentTZTimes[h] + "</td><td>" + requesterTZTimes[h] + "</td>");
+        //times.append("</tr>");
+      //}
     },
 
     handleHidden: function() {
