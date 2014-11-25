@@ -3,10 +3,12 @@
   return {
     events: {
       'app.activated'     :'getRequesterInfo',
-      'requesterInfo.done':'setRequesterInfo',
-      'requesterInfo.fail':'showError',
-      'agentInfo.done'    :'setAgentInfo',
-      'agentInfo.fail'    :'showError',
+      //'requesterInfo.done':'setRequesterInfo',
+      //'requesterInfo.fail':'showError',
+      'userInfo.done':'setUserInfo',
+      'userInfo.fail':'showError',
+      //'agentInfo.done'    :'setAgentInfo',
+      //'agentInfo.fail'    :'showError',
       'time_zones.done'   :'setTimezone',
       'time_zones.fail'   :'showError',
       'shown #meeting'    :'handleShown',
@@ -16,6 +18,14 @@
     requests: {
 
       requesterInfo: function(id) {
+        return {
+          url: '/api/v2/users/' + id + '.json',
+          type: 'GET',
+          dataType: 'json'
+        };
+      },
+
+      userInfo: function(id) {
         return {
           url: '/api/v2/users/' + id + '.json',
           type: 'GET',
@@ -72,13 +82,21 @@
       return result;
     },
 
-
     //start running the app here
     getRequesterInfo: function() {
+      var requesterPromise = this.ajax('userInfo', this.ticket().requester().id());
+      var agentPromise     = this.ajax('userInfo', this.currentUser().id());
+      var timezonePromise  = this.ajax('time_zones');
+
       this.switchTo('loading');
+
+      this.when(requesterPromise, agentPromise, timezonePromise).then(function() {
+        this.myLogger("promises kept");
+        this.showInfo();
+      }.bind(this));
+
       var id = this.ticket().requester().id();
       this.myLogger("The requester ID is " + id);
-      this.ajax('requesterInfo', id);
     },
 
     setRequesterInfo: function(userData) {
@@ -89,26 +107,25 @@
       this.getAgentInfo();
     },
 
-    getAgentInfo: function() {
-      var id = this.currentUser().id();
-      this.myLogger("The agent ID is " + id);
-      this.ajax('agentInfo', id);
-    },
-
-    setAgentInfo: function(userData) {
-      this.myLogger("Setting agentData");
-      this.agentData = userData;
-      this.myLogger(this.agentData);
-      //now get the timezone data
-      this.ajax('time_zones');
+    setUserInfo: function(userData) {
+      this.switchTo('loading');
+      this.myLogger("Setting requesterData");
+      if (this.ticket().requester().id() == userData.user.id) {
+        this.myLogger("Found the requester");
+        this.requesterData = userData;
+      } else {
+        this.myLogger("Found the Agent");
+        this.agentData = userData;
+      }
+      if (this.requesterData && this.agentData) {
+        this.ajax('time_zones');
+      }
     },
 
     setTimezone: function(timezone) {
       this.myLogger("Setting the timezone object");
       this.myLogger(timezone);
       this.timezone = timezone;
-      //now show the info
-      this.showInfo();
     },
 
     //show hours 0-23 offset for the user's TZ
