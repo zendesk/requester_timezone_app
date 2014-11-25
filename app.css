@@ -1,6 +1,5 @@
 #bug_link {
   font-size: 80%;
-  padding-top: 1-px;
 }
 
 .total {
@@ -11,4 +10,15 @@
 
 footer.requestertz-footer {
   border-left: 0px;
+}
+
+.table-container {
+  width: 50%;
+  margin: auto;
+}
+
+.hourpair {
+  td,th {
+    text-align: center;
+  }
 }

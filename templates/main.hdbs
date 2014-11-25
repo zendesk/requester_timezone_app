@@ -20,17 +20,21 @@
     <h3 id="meetingplannerid">Meeting Planner</h3>
   </div>
   <div class="modal-body">
-    <table width="50%">
-      <tbody id="timestable">
-        <tr>
-          <th>Your Time</th>
-          <th>Requester's Time</th>
-        </tr>
-        {{#each meetingTimes}}
-        <tr><td>{{agent}}</td><td>{{requester}}</td></tr>
-        {{/each}}
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table width="50%" class="table">
+        <thead>
+          <tr class="hourpair">
+            <th>Your Time</th>
+            <th>Requester's Time</th>
+          </tr>
+        </thead>
+        <tbody id="timestable">
+          {{#each meetingTimes}}
+          <tr class="hourpair"><td>{{agent}}</td><td>{{requester}}</td></tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
