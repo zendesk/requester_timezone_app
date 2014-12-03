@@ -24,8 +24,8 @@
       <table width="50%" class="table">
         <thead>
           <tr class="hourpair">
-            <th>Your Time</th>
-            <th>Requester's Time</th>
+            <th>Your Time ({{agentData.user.time_zone}})</th>
+            <th>Requester's Time ({{requesterData.user.time_zone}})</th>
           </tr>
         </thead>
         <tbody id="timestable">
