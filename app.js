@@ -55,10 +55,9 @@
     getLocalTime: function(offset) {
       var result;
       this.myLogger("Getting the local time from offset " + offset);
-      //this.myLogger("UTC:" + (new Date().toUTCString()));
       //convert offset in minutes to milliseconds
-      var offset_ms = offset * 60 * 1000;
-      var localtime = new Date(new Date().getTime() + offset_ms);
+      var offsetMS = offset * 60 * 1000;
+      var localtime = new Date(new Date().getTime() + offsetMS);
       result = localtime.toUTCString().replace( / GMT$/, "");
       this.myLogger("local:" + result);
       return result;
