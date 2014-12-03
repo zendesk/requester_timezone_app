@@ -36,6 +36,10 @@
       }
     },
 
+    shortDateString: function(theDate) {
+      return theDate.toString().replace( /:00 GMT(.+)$/, "");
+    },
+
     getUserTZ: function(userTZ) {
       var result;
       this.myLogger("Looking for the timezone that matches " + userTZ);
@@ -106,21 +110,20 @@
       this.timezone = timezone;
     },
 
-    //show hours 0-23 offset for the user's TZ
-    populateTZTimes: function(offset) {
+    //get hours 0-23 for the agents timezone and the corresponding requesters time
+    populateTZTimes: function(agentOffset, requesterOffset) {
       var times = [];
-      var current_hour;
-      var current_time;
+      var now = new Date();
+      var currentTime = new Date(now.getUTCFullYear(), now.getMonth(), now.getUTCDate(), null, null, null);
+      var agentTime = currentTime;
+      this.myLogger("Agent offset:" + agentOffset + " Requester offset:" + requesterOffset);
+      var requesterModifier = (agentOffset/60) - (requesterOffset/60);
+      //if the requester offset is less than the agent, we need to go back (ie - subtract)
+      if (agentOffset > requesterOffset) { requesterModifier *= -1;}
+      var requesterTime = new Date(currentTime.getTime() + (requesterModifier * 60 * 60 * 1000));
       for (var h=0; h<24; h++){
-        current_hour = h + (offset/60);
-        if (current_hour < 0) {
-          current_hour += 24;
-        }
-        if (current_hour > 24) {
-          current_hour = current_hour % 24;
-        }
-        current_time = new Date(null, null, null, current_hour, null, null);
-        times.push(current_time.toTimeString().substring(0,5));
+        times.push({agent: new Date(agentTime.getTime() + (3600000 * h)),
+                    requester: new Date(requesterTime.getTime() + (3600000 * h))});
       }
       return times;
     },
@@ -136,15 +139,18 @@
       this.myLogger(this.requesterData);
       this.setUserTZData();
       var meetingTimes = this.createMeetings();
-      this.switchTo('main', {requesterData: this.requesterData, requesterTZ: this.requesterTZ, meetingTimes: meetingTimes});
+      this.switchTo('main', {requesterData: this.requesterData, 
+                             requesterTZ:   this.requesterTZ, 
+                             agentData:     this.agentData,
+                             meetingTimes:  meetingTimes});
     },
 
     createMeetings: function() {
-      var agentTZTimes = this.populateTZTimes(this.agentTZ.offset);
-      var requesterTZTimes = this.populateTZTimes(this.requesterTZ.offset);
-      return _.map(agentTZTimes, function(hour, index) {
-        return {agent: hour, requester: requesterTZTimes[index]};
-      });
+      var times = this.populateTZTimes(this.agentTZ.offset, this.requesterTZ.offset);
+      return _.map(times, function(hour, index) {
+        return {agent: this.shortDateString(hour.agent),
+                requester: this.shortDateString(hour.requester)};
+      }.bind(this));
     },
 
     showError: function() {
