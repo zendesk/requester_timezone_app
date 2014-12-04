@@ -30,7 +30,7 @@
         </thead>
         <tbody id="timestable">
           {{#each meetingTimes}}
-          <tr class="hourpair"><td>{{agent}}</td><td>{{requester}}</td></tr>
+          <tr class="hourpair"><td class="{{agentClass}}">{{agent}}</td><td class="{{requesterClass}}">{{requester}}</td></tr>
           {{/each}}
         </tbody>
       </table>

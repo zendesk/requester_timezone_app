@@ -147,8 +147,15 @@
     createMeetings: function() {
       var times = this.populateTZTimes(this.agentTZ.offset, this.requesterTZ.offset);
       return _.map(times, function(hour, index) {
+        var agentGood, requesterGood;
+        var agentTime = hour.agent.getHours();
+        var requesterTime = hour.requester.getHours();
+        if (agentTime >= 9 && agentTime <= 17) agentGood = "goodtime";
+        if (requesterTime >= 9 && requesterTime <= 17) requesterGood = "goodtime";
         return {agent: this.shortDateString(hour.agent),
-                requester: this.shortDateString(hour.requester)};
+                agentClass: agentGood,
+                requester: this.shortDateString(hour.requester),
+                requesterClass: requesterGood};
       }.bind(this));
     },
 
