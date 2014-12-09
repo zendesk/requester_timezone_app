@@ -30,7 +30,7 @@
 
     //helpers
     myLogger: function(msg) {
-      var logging = true;
+      var logging = false;
       if (logging) {
         console.log(msg);
       }
