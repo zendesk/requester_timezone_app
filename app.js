@@ -2,11 +2,11 @@
 
   return {
     events: {
-      'app.activated'     :'getRequesterInfo',
-      'userInfo.done':'setUserInfo',
-      'userInfo.fail':'showError',
-      'time_zones.done'   :'setTimezone',
-      'time_zones.fail'   :'showError'
+      'app.activated'   :'getRequesterInfo',
+      'userInfo.done'   :'setUserInfo',
+      'userInfo.fail'   :'showError',
+      'time_zones.done' :'setTimezone',
+      'time_zones.fail' :'showError'
     },
 
     requests: {
@@ -52,6 +52,14 @@
       return result;
     },
 
+    whichModal: function() {
+      if (this.requesterData.user.id == this.agentData.user.id) {
+        this.whichModal = 'userIsRequester';
+      } else {
+        this.whichModal = 'meeting';
+      }
+    },
+
     getLocalTime: function(offset) {
       var result;
       this.myLogger("Getting the local time from offset " + offset);
@@ -73,6 +81,7 @@
 
       this.when(requesterPromise, agentPromise, timezonePromise).then(function() {
         this.myLogger("promises kept");
+        this.whichModal();
         this.showInfo();
       }.bind(this));
 
@@ -91,7 +100,8 @@
     setUserInfo: function(userData) {
       this.switchTo('loading');
       this.myLogger("Setting requesterData");
-      if (this.ticket().requester().id() == userData.user.id) {
+      //in cases where the requester is the currentuser, set the userData for both
+      if (!this.requesterData && (this.ticket().requester().id() == userData.user.id)) {
         this.myLogger("Found the requester");
         this.requesterData = userData;
       } else {
@@ -141,6 +151,7 @@
       this.switchTo('main', {requesterData: this.requesterData, 
                              requesterTZ:   this.requesterTZ, 
                              agentData:     this.agentData,
+                             whichModal:    this.whichModal,
                              meetingTimes:  meetingTimes});
     },
 

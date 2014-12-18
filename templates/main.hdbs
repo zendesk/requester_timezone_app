@@ -11,7 +11,7 @@
     <td class="total">{{requesterTZ.localtime}}</td>
   </tr>
 </table>
-<a class="btn btn-large" data-toggle="modal" data-target="#meeting">Meeting Planner</a>
+<a class="btn btn-large" data-toggle="modal" data-target="#{{whichModal}}">Meeting Planner</a>
 
 <!-- modal for matching your times with their's -->
 <div id="meeting" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -35,6 +35,20 @@
         </tbody>
       </table>
     </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+
+<!-- modal for meeting times when you're the requester -->
+<div id="userIsRequester" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="meetingplannerid">Meeting Planner</h3>
+  </div>
+  <div class="modal-body">
+You can meet with yourself whenever you want!
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
