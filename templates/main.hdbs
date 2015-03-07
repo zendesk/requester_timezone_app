@@ -12,7 +12,7 @@
   </tr>
 </table>
 <div class="meeting-times">
-   <a class="btn btn-large" data-toggle="modal" data-target="#{{whichModal}}">Find a meeting time</a>
+   <a class="btn btn-large meeting-btn" data-toggle="modal" data-target="#{{whichModal}}">Find a meeting time</a>
  </div>
 
 <!-- modal for matching your times with their's -->
