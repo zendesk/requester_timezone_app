@@ -26,3 +26,11 @@ footer.requestertz-footer {
 .goodtime {
   background-color: #9FEDB2;
 }
+
+.meeting-times {
+  padding-top: 5px;
+}
+
+.btn-large {
+  float: right;
+}

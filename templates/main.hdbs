@@ -11,7 +11,9 @@
     <td class="total">{{requesterTZ.localtime}}</td>
   </tr>
 </table>
-<a class="btn btn-large" data-toggle="modal" data-target="#{{whichModal}}">Meeting Planner</a>
+<div class="meeting-times">
+   <a class="btn btn-large" data-toggle="modal" data-target="#{{whichModal}}">Find a meeting time</a>
+ </div>
 
 <!-- modal for matching your times with their's -->
 <div id="meeting" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
