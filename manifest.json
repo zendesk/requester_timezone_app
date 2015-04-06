@@ -6,7 +6,7 @@
     "url": "https://github.com/barker1977"
   },
   "defaultLocale": "en",
-  "private": true,
+  "private": false,
   "location": "ticket_sidebar",
   "version": "0.2",
   "singleInstall": true,
