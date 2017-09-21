@@ -1,9 +1,9 @@
 {
   "name": "Requester Timezone",
   "author": {
-    "name": "Matt Barker",
-    "email": "mbarker@zendesk.com",
-    "url": "https://github.com/barker1977"
+    "name": "Zendesk Labs",
+    "email": "zenlabs@zendesk.com",
+    "url": "https://github.com/zendesklabs/requester_timezone_app"
   },
   "defaultLocale": "en",
   "private": false,
